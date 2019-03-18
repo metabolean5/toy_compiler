@@ -1,0 +1,19 @@
+class id : id {
+
+	varDec
+	funcDec
+
+
+} ;
+
+type : id sr  id (fparams) {
+	
+	varDec
+	statement
+} ;
+
+main {
+	
+	varDec
+	statement
+};

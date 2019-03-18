@@ -1,0 +1,16 @@
+  ERROR at : 
+[SOLO OPERATOR] position : [line=27,col =16] lexeme : '+'
+
+
+  ERROR at : 
+[SOLO OPERATOR] position : [line=27,col =17] lexeme : '+'
+
+
+  ERROR at : 
+[SOLO OPERATOR] position : [line=27,col =17] lexeme : '+'
+
+
+  ERROR at : 
+[SOLO OPERATOR] position : [line=27,col =17] lexeme : '+'
+
+

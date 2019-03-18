@@ -1,0 +1,21 @@
+ 
+program{
+    int x;
+    int y;
+    x = not 1.05 + ((2.04 * 2.47) - 3.0) + 7.0006 > 1 and not - 1;
+    y = 1;
+
+    if (y > 5) then
+        put(y);
+    else
+        if (y < 5) then
+            put(y)
+        else
+        ;
+    ;
+
+    for( int i = 0; i < 10; i = i + 1)       for (int j = 0; j < 10; j = j + 1)
+            put(i+j);
+        ;
+    
+}	

@@ -1,0 +1,9 @@
+program {
+    int w[10];
+    int x[10][10];
+    int y;
+    int z;
+
+    y = 3;
+    x[y+2][y+4] = w[y*2];
+};

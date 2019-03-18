@@ -1,0 +1,14 @@
+class X {
+    int mem1;
+    int mem2;
+    int mem3;
+};
+
+program {
+    int a;
+    float b;
+    int c[2][4];
+    float d[1][2];
+    X x;
+    X arrX[4];
+};

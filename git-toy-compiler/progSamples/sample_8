@@ -1,0 +1,11 @@
+int addFunc(int a, int b){
+    int x;
+    x = a+b;
+    return(x);
+};
+
+program {
+    int i;
+    i = addFunc(5,4);
+    put(i);
+};

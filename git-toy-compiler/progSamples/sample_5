@@ -1,0 +1,28 @@
+class A {
+    int a;
+    int aFunc();
+}
+
+class B {
+    int b;
+    A a;
+    int bFunc();
+}
+
+int A::aFunc() {
+    return(20);
+};
+
+int B::bFunc() {
+    return(0);
+};
+
+program {
+    A a;
+    B b;
+    int x;
+    int y;
+
+    x = b.a.aFunc();
+    put(x);
+};

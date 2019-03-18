@@ -1,0 +1,15 @@
+prog         -> REP1 REP2 main funcBody ; 
+REP1         -> classDec REP1 | EPSILON 
+REP2         -> funcDef REP2 | EPSILON 
+classDec     -> class id OP1 { REP3 REP4 } ; 
+OP1          -> : id REP6 | EPSILON 
+REP6         -> , id REP6 | EPSILON 
+REP3         -> varDec REP3 | EPSILON 
+REP4         -> funcDec REP4 | EPSILON 
+funcDecl     -> type id ( fParams ) ; 
+funcHead     -> type OP2 id ( fParams ) 
+OP2          -> : id sr | EPSILON 
+funcDef      -> funcHead funcBody ; 
+funcBody     -> { REP7  REP78  } 
+REP78         -> statement REP78 | EPSILON 
+REP7         -> varDec REP7 | EPSILON  

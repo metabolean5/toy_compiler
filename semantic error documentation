@@ -1,0 +1,16 @@
+first pass error detection:
+
+"multiple definition (member function)"
+"multiple definition (free function)"
+"multiple definition (class)"
+"multiple identifier"
+"undeclared member function"
+"undeclared identifier"
+"undefined function declaration"
+"invalid class"
+"WARNING overwritten member"
+
+2nd pass
+
+"type mismatch in statement"
+"invalid function call or data member"

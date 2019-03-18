@@ -1,0 +1,59 @@
+class BaseNumber {
+
+  float num;
+
+};
+
+
+class Number : BaseNumber {
+
+
+  float add(float val1);
+
+};
+
+
+float Number::add(float val1){
+
+  float result;
+  result = val1 + num;
+
+  return (result);
+
+};
+
+float randomize(Number a){ 
+  
+  float value; 
+  value = 100 * (2 + 3.0 / 7.0006) + a.num;
+  return (value);
+
+}; 
+
+
+main { 
+  
+  Number a;
+  Number b;
+  Number c;
+
+  Number abc;
+
+  a.num = 0.1;
+  b.num = 0.2;
+  c.num = 0.3;
+
+  abc.num = a.add(b.num - 4 ).add(c.num);
+
+
+  abc.num = (0.1 / 0.2 * 0.5) + randomize(a);
+
+
+  a = a < b;
+  b = c <= a;
+  b = c && a;
+  
+  write(abc.num);
+  
+}; 
+

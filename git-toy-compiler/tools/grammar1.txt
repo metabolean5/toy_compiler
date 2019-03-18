@@ -1,0 +1,57 @@
+prog         -> REP1 REP2 main funcBody ; 
+REP1         -> classDec REP1 | EPSILON 
+REP2         -> funcDef REP2 | EPSILON 
+classDec     -> class id OP1 { REP3 REP4 } ; 
+OP1          -> : id REP6 | EPSILON 
+REP6         -> , id REP6 | EPSILON 
+REP3         -> varDec REP3 | EPSILON 
+REP4         -> funcDec REP4 | EPSILON 
+funcDec     -> type id ( fParams ) ; 
+funcHead     -> type OP2 id ( fParams ) 
+OP2          ->  id sr | EPSILON 
+funcDef      -> funcHead funcBody ; 
+funcBody     -> { REP7  REP78  } 
+REP78         -> statement REP78 | EPSILON 
+REP7         -> varDec REP7 | EPSILON 
+REP8         -> statement REP8 | EPSILON 
+varDec      -> type id REP9 ; 
+REP9         -> arraySize REP9 | EPSILON 
+statement    -> for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ;  | if ( expr ) then statBlock else statBlock ;  | return ( expr ) ; | write ( expr ) ;  | read ( variable ) ;  | assignStat ; 
+assignStat   -> variable assignOp expr 
+statBlock    -> { REP10 } | statement | EPSILON 
+REP10        -> statement REP10 | EPSILON 
+expr         -> arithExpr expr1
+expr1        ->  relOp arithExpr    | EPSILON 
+relExpr      -> arithExpr relOp arithExpr 
+arithExpr    -> term arithExpr1 
+arthExpr1    -> addOp term arthExpr1      | EPSILON 
+term         -> factor term1 
+term1        -> multOp factor term1     | EPSILON 
+sign         -> + | - 
+idnest       -> id REP11 .
+REP11        -> id REP11 . REP12    | EPSILON  | REP12
+factor        -> ( arithExpr )          
+                 | floatNum        
+                 | intNum      
+                 | not factor      
+                 | FACTO1 REP12 id factor1      
+                 | sign factor
+factor1      -> REP12        | ( aParams )
+variable      -> FACTO1 . REP12 id REP12    | EPSILON id REP12
+REP12        -> indice  REP12    | EPSILON
+FACTO1        -> id REP11
+functionCall ->  FACTO1 . REP12 id ( aParams )  | EPSILON id ( aParams )
+indice        -> [ arithExpr ]
+arraySize    -> [ intNum ]
+type         -> integer | float | id
+fParams      -> type id REP13 REP14 | EPSILON
+REP13        -> arraySize REP13   | EPSILON
+REP14        -> fParamsTail REP14   | EPSILON
+aParams -> expr REP15 | EPSILON
+REP15        -> aParamsTail REP15             | EPSILON
+fParamsTail -> , type id REP13
+aParamsTail -> , expr
+assignOp -> =
+relOp -> eq | neq | lt | gt | leq | geq
+addOp ->  + | - | or
+multOp -> * | / | and
