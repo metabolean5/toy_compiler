@@ -14,7 +14,7 @@ of the language (lexemes/tokens) is implemented via a **table driven**
 design. A stream of Token objects is returned.
 
 
--SYNTACTIC PARSER- [parser.cpp/lexer.cpp]
+-SYNTACTIC PARSER- [parser.cpp/parser.h]
 ------------------------------------------
 
 The parser is also implemented via a table driven design.
@@ -26,7 +26,7 @@ an intermediate representation of the program which is passed on
 to the semantic analysis phase.
 
 
--SEMANTIC ANALYSIS- [visitor.cpp/visitor.cpp]
+-SEMANTIC ANALYSIS- [visitor.cpp/visitor.h]
 ----------------------------------------------
 
 The semantic analysis is done using a tree traversal of the
