@@ -1,16 +1,24 @@
-  ERROR at : 
-[SOLO OPERATOR] position : [line=27,col =16] lexeme : '+'
+
+
 
 
   ERROR at : 
-[SOLO OPERATOR] position : [line=27,col =17] lexeme : '+'
+[RESERVED 'integer'] position : [line=10,col =10] lexeme : 'integer'
 
 
   ERROR at : 
-[SOLO OPERATOR] position : [line=27,col =17] lexeme : '+'
+[SOLO OPERATOR] position : [line=10,col =15] lexeme : ';'
 
 
   ERROR at : 
-[SOLO OPERATOR] position : [line=27,col =17] lexeme : '+'
+[SOLO OPERATOR] position : [line=16,col =2] lexeme : ';'
+
+
+  ERROR at : 
+[SOLO OPERATOR] position : [line=7,col =5] lexeme : '['
+
+
+  ERROR at : 
+[SOLO OPERATOR] position : [line=8,col =5] lexeme : '['
 
 

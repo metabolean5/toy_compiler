@@ -19,15 +19,65 @@ Visitor::Visitor(){
 	
 } 
 
+void Visitor::showHIERstack(){ 
+	
+	cout << "STATE OF hierarchy STACK : ";
+	
+	vector<SymbolTable*> temp;
+	
+    while (!hierStack.empty()) 
+    { 
+		temp.push_back(hierStack.top()); 
+		hierStack.pop();
+	
+    } 
+	
+	cout << temp.size() ;
+	
+	for (unsigned i = temp.size(); i-- > 0; ){
+		cout << '\t' << temp.at(i)->getName();
+		hierStack.push(temp.at(i));
+	}
+	
+    cout << '\n'; 
+} 
+
+
+bool Visitor::checkParams(SymbolTable * symt, Node * node){
+	
+
+	string type = typeLookUp(symt->getParent(), node->getParent());
+	stringstream ss;
+	ss << type << ":" ;
+	
+	string prevCTYPE = CTYPE;
+
+		for (int i =  node->nbOfChildren() - 1 ; i >= 0; i--) { // parameter type
+			ss << typeCheck(node->getChildAt(i));
+			ss << "," ;
+		}
+	
+	CTYPE = prevCTYPE; //this is because CTYPE is set to the parameter type checking type on the line just above
+	
+	if (symt->getType() != ss.str()){
+		SymbolTable * error = new SymbolTable(node->getName(), "variable" , node->getName(), node);
+		error->setLine(node->getLine());
+		reportError("invalid parameter list for function call ", error);
+	}
+	
+	return true;
+	
+}
 
 string Visitor::getReturnType(Node * node, bool freefunc){
 	
 	if(freefunc){
-	
 		for(int i = 0 ; i <  freeFuncs.size()  ; ++i) { // look for function def in free functions
 			
 			if(freeFuncs.at(i)->getName() == node->getName()){
+				
 				string s = freeFuncs.at(i)->getType();
+				checkParams(freeFuncs.at(i) , node->getChildAt(0));
 				FCALL = true;
 				return s.substr(0, s.find(":"));
 			}
@@ -39,6 +89,9 @@ string Visitor::getReturnType(Node * node, bool freefunc){
 			
 			if((funcDecs.at(i)->getName() == node->getName()) && 
 			   (typeLookUp(hierStack.top(), node->getParent()) == funcDecs.at(i)->getType().substr(0, funcDecs.at(i)->getType().find(":")))){
+				
+				checkParams(funcDecs.at(i), node->getChildAt(0));
+				
 				string s = funcDecs.at(i)->getType();
 				FCALL = true;
 				return s.substr(0, s.find(":"));
@@ -75,19 +128,18 @@ string Visitor::getReturnType(Node * node, bool freefunc){
 
 	reportError("invalid function call or data member", error );
 	
-	
+	return "invalid";
 	
 			
 }
 
 void Visitor::checkIfFuncCall(Node * node){
-
-
 			
 	for (int i = 0 ; i < node->nbOfChildren() ; ++i){
 		
 		
 		if( node->getChildAt(i)->getType() == "params"){
+			
 			node->setType(getReturnType(node, true));
 			FCALL = true;
 			OPERAND = true;
@@ -99,6 +151,8 @@ void Visitor::checkIfFuncCall(Node * node){
 			FCALL = true;
 			OPERAND = true;
 		}
+		
+		
 		
 	}	
 }
@@ -240,6 +294,9 @@ void Visitor::def2dec(SymbolTable * symt){
 				
 				if(symt->getName() == classDecs.at(i)->getEntries().at(j)->getName()){
 				
+					if (symt->getType() != classDecs.at(i)->getEntries().at(j)->getType() ){
+						reportError("could not match with function declaration", symt);
+					}
 					if (classDecs.at(i)->getEntries().at(j)->isDefined()){
 						reportError("multiple definitions (member function)", symt);
 					}else{
@@ -582,7 +639,7 @@ string Visitor::typeLookUp(SymbolTable * symt, Node * node){
 	}
 }
 
-bool Visitor::typeCheck(Node * node){
+string Visitor::typeCheck(Node * node){
 	
 	bool error = false;
 	string prevType = node->getType(); 
@@ -592,6 +649,7 @@ bool Visitor::typeCheck(Node * node){
 	if(node->getType() == "floatNum"){node->setType("float"); OPERAND = true; }
 	if(node->getType() == "intNum"){node->setType("integer"); OPERAND = true; }
 	if(node->getType() == "id"){node->setType(typeLookUp(hierStack.top(), node)); OPERAND = true;}
+	if(node->getType() == "dimensions"){ FCALL = true; }
 	
 	
 	if(CTYPE == "~" && OPERAND){
@@ -604,7 +662,7 @@ bool Visitor::typeCheck(Node * node){
 
 	if(error == true){
 		
-		SymbolTable * error = new SymbolTable(node->getName(), "variable" , node->getName(), node);
+		SymbolTable * error = new SymbolTable(node->getName(), "variable" , node->getType(), node);
 		error->setLine(node->getLine());
 		
 		stringstream ss;
@@ -618,18 +676,47 @@ bool Visitor::typeCheck(Node * node){
 	
 	if (FCALL == false){
 		for (int i = 0 ; i < node->nbOfChildren() ; ++i){
-			typeCheck(node->getChildAt(i));
+			typeCheck(node->getChildAt(i));                 //recursive call
 		}
 	}else{
 		FCALL = false;
 	}
 	
-	return true;
+	return CTYPE;
 }
+
+
+void Visitor::checkIndex(Node * node){
+	
+	
+	for (int i = 0 ; i < node->nbOfChildren() ; ++i){
+			
+			if(node->getChildAt(i)->getType() == "dimensions"){
+				
+				for (int j = 0 ; j < node->getChildAt(i)->nbOfChildren() ; ++j){
+				
+					CTYPE = "~";
+					if (typeCheck(node->getChildAt(i)->getChildAt(j)) != "integer"){
+						SymbolTable * error = new SymbolTable(node->getChildAt(i)->getChildAt(j)->getName(), "index expression" , node->getChildAt(i)->getChildAt(j)->getType(), node);
+						error->setLine(node->getLine());
+						reportError("index must be of type integer", error) ;
+					}
+				}
+			}
+		} 	
+		
+}
+
 
 void Visitor::semanticAction2(Node * node){
 
-	if (node->getType() == "main" || node->getType() == "funcdef" || node->getType() == "classDec" ){hierStack.push(getSymt(node->getID()));}
+	if ( node->getType() == "id" ){ // check index type
+		checkIndex(node);	
+	}
+	
+	if (node->getType() == "main" || node->getType() == "funcdef" || node->getType() == "classDec" ){
+		hierStack.push(getSymt(node->getID()));
+	}
 	
 	if (node->getType() == "assignStat" || node->getType() == "T1s" || node->getType() == "relexpr" || node->getType() == "artm1"){
 		CTYPE = "~";

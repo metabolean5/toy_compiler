@@ -94,12 +94,12 @@ void Parser::initialize(vector<Token> wordL){
 				{ "~Params",  "(", "aParams", ")" , "~Attach"},
 				{ "FACTO1", "." , "REP12", "id", "REP12"},
 				{ "EPSILON" , "id" , "~K" ,  "REP12"},
-				{ "indice", "REP12"},
+				{ "indice", "~Attach", "REP12"},
 				{ "EPSILON" },
 				{ "id","~K", "REP11"},
 				{ "FACTO1" , ".", "REP12" , "id", "(", "aParams", ")"},
 				{ "EPSILON", "id", "(", "aParams", ")"},
-				{ "[", "arithExpr","~Attach", "]"},
+				{ "~Dimensions", "[", "arithExpr","~Attach", "]"},
 				{ "[", "intNum" ,"~Dim" ,"]"},
 				{ "integer"},
 				{ "float"},
@@ -415,6 +415,10 @@ void Parser::pushRHS(vector<string> rhs){
 
 bool Parser::backTack(Token &a, string &x){
 	
+	if ((x == "factor1") && (a.getWord() == "]") ){               // giving priority to funcDec
+		parseStack.pop();
+		return true;
+	}
 	
 	if ((x == "assignOp"  || x == ")") && (a.getWord() == ".")){  
 		parseStack.push("~Att.");
@@ -627,6 +631,10 @@ void Parser::semanticRecord(string x, Token a){
 	
 	if (x == "~Params"){
 		makeNode(a, "params");
+	}
+	
+	if (x == "~Dimensions"){
+		makeNode(a, "dimensions");
 	}
 	
 	if (x == "~inherList"){

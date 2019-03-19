@@ -33,6 +33,7 @@ public:
 	void printErrors();
 	SymbolTable* getSymt(int id);
 	void printFreeFuncs();
+	void showHIERstack();
 	
 	//MULTIPLE DEFINITIONS CHECKS
 	bool multipleIDcheck(SymbolTable* parent, string id);
@@ -48,11 +49,13 @@ public:
 	void funcDefCheck();
 	void deleteFuncDec(SymbolTable * symt);
 	string getReturnType(Node * fname, bool freefunc);
+	bool checkParams(SymbolTable * symt, Node * node);
 	
 	//FOR STATEMENTS
 	bool checkIfDefined(Node * node);
-	bool typeCheck(Node * node);
+	string typeCheck(Node * node);
 	void checkIfFuncCall(Node * node);
+	void checkIndex(Node * node);
 	
 	//FOR ALL ENTRIES
 	string typeLookUp(SymbolTable * symt, Node * node);
